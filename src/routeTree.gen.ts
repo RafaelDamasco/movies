@@ -9,18 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './pages/__root'
+import { Route as AppLayoutRouteImport } from './pages/_app/layout'
 import { Route as AppFavoritesIndexRouteImport } from './pages/_app/favorites/index'
 import { Route as AppHomeIndexRouteImport } from './pages/_app/_home/index'
 
-const AppFavoritesIndexRoute = AppFavoritesIndexRouteImport.update({
-  id: '/_app/favorites/',
-  path: '/favorites/',
+const AppLayoutRoute = AppLayoutRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppFavoritesIndexRoute = AppFavoritesIndexRouteImport.update({
+  id: '/favorites/',
+  path: '/favorites/',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
 const AppHomeIndexRoute = AppHomeIndexRouteImport.update({
-  id: '/_app/_home/',
+  id: '/_home/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -33,6 +38,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_app': typeof AppLayoutRouteWithChildren
   '/_app/_home/': typeof AppHomeIndexRoute
   '/_app/favorites/': typeof AppFavoritesIndexRoute
 }
@@ -41,36 +47,55 @@ export interface FileRouteTypes {
   fullPaths: '/' | '/favorites'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/favorites'
-  id: '__root__' | '/_app/_home/' | '/_app/favorites/'
+  id: '__root__' | '/_app' | '/_app/_home/' | '/_app/favorites/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AppHomeIndexRoute: typeof AppHomeIndexRoute
-  AppFavoritesIndexRoute: typeof AppFavoritesIndexRoute
+  AppLayoutRoute: typeof AppLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/favorites/': {
       id: '/_app/favorites/'
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof AppFavoritesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppLayoutRoute
     }
     '/_app/_home/': {
       id: '/_app/_home/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppHomeIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppLayoutRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
+interface AppLayoutRouteChildren {
+  AppHomeIndexRoute: typeof AppHomeIndexRoute
+  AppFavoritesIndexRoute: typeof AppFavoritesIndexRoute
+}
+
+const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppHomeIndexRoute: AppHomeIndexRoute,
   AppFavoritesIndexRoute: AppFavoritesIndexRoute,
+}
+
+const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
+  AppLayoutRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  AppLayoutRoute: AppLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
