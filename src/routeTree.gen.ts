@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './pages/__root'
 import { Route as AppLayoutRouteImport } from './pages/_app/layout'
 import { Route as AppFavoritesIndexRouteImport } from './pages/_app/favorites/index'
 import { Route as AppHomeIndexRouteImport } from './pages/_app/_home/index'
+import { Route as AppMovieMovieIdRouteImport } from './pages/_app/movie/$movieId'
 
 const AppLayoutRoute = AppLayoutRouteImport.update({
   id: '/_app',
@@ -27,27 +28,40 @@ const AppHomeIndexRoute = AppHomeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppLayoutRoute,
 } as any)
+const AppMovieMovieIdRoute = AppMovieMovieIdRouteImport.update({
+  id: '/movie/$movieId',
+  path: '/movie/$movieId',
+  getParentRoute: () => AppLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
+  '/movie/$movieId': typeof AppMovieMovieIdRoute
   '/': typeof AppHomeIndexRoute
   '/favorites': typeof AppFavoritesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/movie/$movieId': typeof AppMovieMovieIdRoute
   '/': typeof AppHomeIndexRoute
   '/favorites': typeof AppFavoritesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppLayoutRouteWithChildren
+  '/_app/movie/$movieId': typeof AppMovieMovieIdRoute
   '/_app/_home/': typeof AppHomeIndexRoute
   '/_app/favorites/': typeof AppFavoritesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/favorites'
+  fullPaths: '/movie/$movieId' | '/' | '/favorites'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/favorites'
-  id: '__root__' | '/_app' | '/_app/_home/' | '/_app/favorites/'
+  to: '/movie/$movieId' | '/' | '/favorites'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/movie/$movieId'
+    | '/_app/_home/'
+    | '/_app/favorites/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,15 +91,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeIndexRouteImport
       parentRoute: typeof AppLayoutRoute
     }
+    '/_app/movie/$movieId': {
+      id: '/_app/movie/$movieId'
+      path: '/movie/$movieId'
+      fullPath: '/movie/$movieId'
+      preLoaderRoute: typeof AppMovieMovieIdRouteImport
+      parentRoute: typeof AppLayoutRoute
+    }
   }
 }
 
 interface AppLayoutRouteChildren {
+  AppMovieMovieIdRoute: typeof AppMovieMovieIdRoute
   AppHomeIndexRoute: typeof AppHomeIndexRoute
   AppFavoritesIndexRoute: typeof AppFavoritesIndexRoute
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
+  AppMovieMovieIdRoute: AppMovieMovieIdRoute,
   AppHomeIndexRoute: AppHomeIndexRoute,
   AppFavoritesIndexRoute: AppFavoritesIndexRoute,
 }

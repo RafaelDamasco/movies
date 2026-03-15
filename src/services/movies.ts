@@ -7,6 +7,11 @@ export interface Movie {
   poster_path: string | null;
   vote_average: number;
   overview: string;
+  release_date: string;
+  genres: {
+    id: number;
+    name: string;
+  }[]
 }
 export interface MoviesResponse {
   page: number;
@@ -28,8 +33,19 @@ export async function fetchMovies(page?: number): Promise<MoviesResponse> {
   return response.data;
 }
 
+export async function fetchMovie(movieId: string): Promise<Movie> {
+  const response = await api.get(`/movie/${movieId}`);
+  return response.data
+}
+
 export const moviesQueryOptions = (page?: number) =>
   queryOptions({
     queryKey: ['movies', { page }],
     queryFn: () => fetchMovies(page),
+  })
+
+export const movieQueryOptions = (movieId: string) =>
+  queryOptions({
+    queryKey: ['movie', { movieId }],
+    queryFn: () => fetchMovie(movieId),
   })

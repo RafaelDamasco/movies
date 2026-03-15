@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios';
-import { fetchMovies } from './movies';
+import { fetchMovies, fetchMovie } from './movies';
 
 vi.mock('@/lib/axios', () => ({
   api: {
@@ -37,6 +37,24 @@ describe('Movies Service', () => {
       vi.mocked(api.get).mockRejectedValueOnce(new Error('fetch_movies_error'));
 
       const result = fetchMovies(1);
+
+      await expect(result).rejects.toEqual(new Error('fetch_movies_error'));
+    });
+  });
+
+  describe('fetchMovie', () => {
+    it('should fetch selected movie successfully', async () => {
+      vi.mocked(api.get).mockResolvedValueOnce('fetch_movie');
+
+      await fetchMovie('123');
+
+      expect(api.get).toHaveBeenCalledWith('/movie/123');
+    });
+
+    it('should handle API errors', async () => {
+      vi.mocked(api.get).mockRejectedValueOnce(new Error('fetch_movies_error'));
+
+      const result = fetchMovie('123');
 
       await expect(result).rejects.toEqual(new Error('fetch_movies_error'));
     });
