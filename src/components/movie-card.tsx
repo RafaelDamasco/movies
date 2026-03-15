@@ -13,7 +13,7 @@ export function MovieCard({ movie }: MovieCardProps) {
       <img
         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
         alt={movie.title}
-        className="w-full object-cover rounded-t-xl h-96"
+        className="w-full object-fill rounded-t-xl h-96"
       />
       <CardHeader>
         <CardTitle>{movie.title}</CardTitle>

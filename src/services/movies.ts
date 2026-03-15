@@ -15,12 +15,17 @@ export interface MoviesResponse {
   total_results: number;
 }
 
-export async function fetchMovies(): Promise<MoviesResponse> {
-  const response = await api.get(`/movie/popular`);
+export async function fetchMovies(page: number): Promise<MoviesResponse> {
+  const response = await api.get(`/movie/popular`, {
+    params: {
+      page,
+    }
+  });
   return response.data
 }
 
-export const moviesQueryOptions = queryOptions({
-  queryKey: ['movies'],
-  queryFn: () => fetchMovies(),
-})
+export const moviesQueryOptions = (page: number) =>
+  queryOptions({
+    queryKey: ['movies', { page }],
+    queryFn: () => fetchMovies(page),
+  })
