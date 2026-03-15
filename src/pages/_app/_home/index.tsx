@@ -5,6 +5,10 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { z } from 'zod';
 
+// TMDB has a maximum of 500 pages for movies
+const MAX_TMDB_PAGES = 500;
+const MOVIES_PER_PAGE = 20;
+
 const searchSchema = z.object({
   page: z.number().int().positive().optional(),
 });
@@ -39,8 +43,8 @@ function Home() {
       </div>
       <Pagination
         page={page!}
-        pages={data.total_pages}
-        totalCount={data.total_results}
+        pages={MAX_TMDB_PAGES}
+        totalCount={MAX_TMDB_PAGES * MOVIES_PER_PAGE}
         onPageChange={handlePageChange}
       />
     </>
