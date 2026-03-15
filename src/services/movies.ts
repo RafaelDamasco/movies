@@ -15,16 +15,20 @@ export interface MoviesResponse {
   total_results: number;
 }
 
-export async function fetchMovies(page: number): Promise<MoviesResponse> {
-  const response = await api.get(`/movie/popular`, {
-    params: {
-      page,
-    }
-  });
-  return response.data
+export async function fetchMovies(page?: number): Promise<MoviesResponse> {
+  if (page) {
+    const response = await api.get(`/movie/popular`, {
+      params: {
+        page,
+      }
+    });
+    return response.data;
+  }
+  const response = await api.get(`/movie/popular`);
+  return response.data;
 }
 
-export const moviesQueryOptions = (page: number) =>
+export const moviesQueryOptions = (page?: number) =>
   queryOptions({
     queryKey: ['movies', { page }],
     queryFn: () => fetchMovies(page),

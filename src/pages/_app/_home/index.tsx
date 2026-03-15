@@ -3,12 +3,15 @@ import { Pagination } from '@/components/pagination';
 import { moviesQueryOptions } from '@/services/movies';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import { z } from 'zod';
+
+const searchSchema = z.object({
+  page: z.number().int().positive().optional(),
+});
 
 export const Route = createFileRoute('/_app/_home/')({
   component: Home,
-  validateSearch: (search) => ({
-    page: Number(search.page) || 1,
-  }),
+  validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({
     page: search.page,
   }),
@@ -33,7 +36,7 @@ function Home() {
         ))}
       </div>
       <Pagination
-        page={page}
+        page={page!}
         pages={data.total_pages}
         totalCount={data.total_results}
         onPageChange={handlePageChange}

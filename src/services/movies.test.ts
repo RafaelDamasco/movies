@@ -25,6 +25,14 @@ describe('Movies Service', () => {
       });
     });
 
+    it('should fetch popular movies successfully without page', async () => {
+      vi.mocked(api.get).mockResolvedValueOnce('fetch_movies');
+
+      await fetchMovies();
+
+      expect(api.get).toHaveBeenCalledWith('/movie/popular');
+    });
+
     it('should handle API errors', async () => {
       vi.mocked(api.get).mockRejectedValueOnce(new Error('fetch_movies_error'));
 
