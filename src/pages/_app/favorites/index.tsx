@@ -4,7 +4,7 @@ import { MovieCard } from "@/components/movie-card";
 import { EmptyFavorites } from './-components/empty-favorites';
 import { FavoritesHeader } from './-components/favorites-header';
 import { Pagination } from '@/components/pagination';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { sortFavorites, paginateFavorites } from './utils';
 
 export const Route = createFileRoute('/_app/favorites/')({
@@ -21,8 +21,8 @@ function Favorites() {
   });
 
   const totalPages = Math.ceil(favorites.length / ITEMS_PER_PAGE);
-  const sortedList = sortFavorites(favorites, filters.sortBy);
-  const paginatedFavorites = paginateFavorites(sortedList, filters.currentPage, ITEMS_PER_PAGE);
+  const sortedList = useMemo(() => sortFavorites(favorites, filters.sortBy), [favorites, filters.sortBy]);
+  const paginatedFavorites = useMemo(() => paginateFavorites(sortedList, filters.currentPage, ITEMS_PER_PAGE), [sortedList, filters.currentPage]);
 
   const handleSortChange = (value: string) => {
     setFilters(prev => ({ ...prev, sortBy: value }));
