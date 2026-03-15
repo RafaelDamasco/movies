@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './pages/__root'
 import { Route as AppLayoutRouteImport } from './pages/_app/layout'
+import { Route as AppSearchIndexRouteImport } from './pages/_app/search/index'
 import { Route as AppFavoritesIndexRouteImport } from './pages/_app/favorites/index'
 import { Route as AppHomeIndexRouteImport } from './pages/_app/_home/index'
 import { Route as AppMovieMovieIdRouteImport } from './pages/_app/movie/$movieId'
@@ -17,6 +18,11 @@ import { Route as AppMovieMovieIdRouteImport } from './pages/_app/movie/$movieId
 const AppLayoutRoute = AppLayoutRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSearchIndexRoute = AppSearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => AppLayoutRoute,
 } as any)
 const AppFavoritesIndexRoute = AppFavoritesIndexRouteImport.update({
   id: '/favorites/',
@@ -38,11 +44,13 @@ export interface FileRoutesByFullPath {
   '/movie/$movieId': typeof AppMovieMovieIdRoute
   '/': typeof AppHomeIndexRoute
   '/favorites': typeof AppFavoritesIndexRoute
+  '/search': typeof AppSearchIndexRoute
 }
 export interface FileRoutesByTo {
   '/movie/$movieId': typeof AppMovieMovieIdRoute
   '/': typeof AppHomeIndexRoute
   '/favorites': typeof AppFavoritesIndexRoute
+  '/search': typeof AppSearchIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,18 +58,20 @@ export interface FileRoutesById {
   '/_app/movie/$movieId': typeof AppMovieMovieIdRoute
   '/_app/_home/': typeof AppHomeIndexRoute
   '/_app/favorites/': typeof AppFavoritesIndexRoute
+  '/_app/search/': typeof AppSearchIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/movie/$movieId' | '/' | '/favorites'
+  fullPaths: '/movie/$movieId' | '/' | '/favorites' | '/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/movie/$movieId' | '/' | '/favorites'
+  to: '/movie/$movieId' | '/' | '/favorites' | '/search'
   id:
     | '__root__'
     | '/_app'
     | '/_app/movie/$movieId'
     | '/_app/_home/'
     | '/_app/favorites/'
+    | '/_app/search/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof AppLayoutRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/search/': {
+      id: '/_app/search/'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AppSearchIndexRouteImport
+      parentRoute: typeof AppLayoutRoute
     }
     '/_app/favorites/': {
       id: '/_app/favorites/'
@@ -105,12 +122,14 @@ interface AppLayoutRouteChildren {
   AppMovieMovieIdRoute: typeof AppMovieMovieIdRoute
   AppHomeIndexRoute: typeof AppHomeIndexRoute
   AppFavoritesIndexRoute: typeof AppFavoritesIndexRoute
+  AppSearchIndexRoute: typeof AppSearchIndexRoute
 }
 
 const AppLayoutRouteChildren: AppLayoutRouteChildren = {
   AppMovieMovieIdRoute: AppMovieMovieIdRoute,
   AppHomeIndexRoute: AppHomeIndexRoute,
   AppFavoritesIndexRoute: AppFavoritesIndexRoute,
+  AppSearchIndexRoute: AppSearchIndexRoute,
 }
 
 const AppLayoutRouteWithChildren = AppLayoutRoute._addFileChildren(
