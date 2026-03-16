@@ -39,7 +39,7 @@ function Favorites() {
   return (
     <>
       <FavoritesHeader sortBy={filters.sortBy} onSortChange={handleSortChange} />
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-5 gap-4 flex-1">
         {paginatedFavorites.map((movie) => (
           <Link to='/movie/$movieId' params={{ movieId: movie.id.toString() }}>
             <MovieCard key={movie.id} movie={movie} />
