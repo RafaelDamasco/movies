@@ -1,6 +1,7 @@
 # Movies React App
 
 Uma aplicação React moderna para explorar filmes populares usando a API do The Movie Database (TMDB).
+Projeto: https://movies-dusky-two.vercel.app/
 
 ## 🚀 Tecnologias
 
