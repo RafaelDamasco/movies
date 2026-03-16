@@ -6,12 +6,14 @@ import { Heart } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { HighlightedText } from "./highlighted-text";
 
 interface MovieCardProps {
   movie: Movie;
+  query?: string;
 }
 
-export function MovieCard({ movie }: MovieCardProps) {
+export function MovieCard({ movie, query }: MovieCardProps) {
   const favorites = useFavoritesStore((state) => state.favorites);
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
   const favorite = favorites.some((fav) => fav.id === movie.id);
@@ -32,7 +34,9 @@ export function MovieCard({ movie }: MovieCardProps) {
       />
       <CardHeader className="flex flex-row items-center">
         <div className="flex flex-col gap-2 flex-1">
-          <CardTitle>{movie.title}</CardTitle>
+          <CardTitle>
+            {query ? <HighlightedText text={movie.title} query={query} /> : movie.title}
+          </CardTitle>
           <CardDescription>
             <p className="flex items-center gap-2">
               <strong>Nota TMDB:</strong>

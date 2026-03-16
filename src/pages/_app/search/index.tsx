@@ -38,7 +38,7 @@ function Search() {
       <div className="grid grid-cols-5 gap-4">
         {data.results.map((movie) => (
           <Link to='/movie/$movieId' params={{ movieId: movie.id.toString() }}>
-            <MovieCard key={movie.id} movie={movie} />
+            <MovieCard key={movie.id} movie={movie} query={query} />
           </Link>
         ))}
       </div>
