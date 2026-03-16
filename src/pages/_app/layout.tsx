@@ -1,7 +1,14 @@
 import { Header } from '@/components/header'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { z } from 'zod'
+
+const searchSchema = z.object({
+  query: z.string().optional(),
+  page: z.number().int().positive().optional(),
+})
 
 export const Route = createFileRoute('/_app')({
+  validateSearch: searchSchema,
   component: RouteComponent,
 })
 
